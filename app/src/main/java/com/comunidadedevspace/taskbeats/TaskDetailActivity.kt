@@ -9,6 +9,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 
@@ -16,7 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 class TaskDetailActivity : AppCompatActivity() {
 
     private var task: Task? = null
-    private lateinit var tvTaskDetail: TextView
+    private lateinit var tvtasktitle: TextView
 
     companion object {
 
@@ -38,12 +40,41 @@ class TaskDetailActivity : AppCompatActivity() {
         // recuperar task
         task = (intent.getSerializableExtra(TASK_DETAIL_EXTRA) as Task?)
 
-        //recuperar campo do xml
-        tvTaskDetail = findViewById(R.id.tv_task_detail)
+        //recuperar campo do xml apenas para usar no showmessage
+        tvtasktitle = findViewById(R.id.tv_title)
 
-        //setar o novo texto na tela
-        tvTaskDetail.text = task?.title ?: "Adicione uma tarefa"
+        val edtTitle = findViewById<EditText>(R.id.edt_title)
+        val edtDesc = findViewById<EditText>(R.id.edt_desc)
+        val btnConcluir = findViewById<Button>(R.id.btn_conluir_task)
 
+
+        if (task != null) {
+            edtTitle.setText(task!!.title)
+            edtDesc.setText(task!!.description)
+        }
+
+        btnConcluir.setOnClickListener {
+            val title = edtTitle.text.toString()
+            val desc = edtDesc.text.toString()
+
+            if (title.isNotEmpty() && desc.isNotEmpty()) {
+                if(task== null){
+                    addOrUpdateTask(0,title, desc, ActionType.CREATE)
+                }else{
+                    addOrUpdateTask(task!!.id,title, desc, ActionType.UPDATE)
+                }
+            } else {
+                showMessage(tvtasktitle, "Titulo e Descrição precisam ser preenchidos")
+            }
+
+        }
+
+
+    }
+
+    private fun addOrUpdateTask(id: Int,title: String, description: String, actionType: ActionType) {
+        val task = Task(id, title, description)
+        returnAction(task, actionType)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -55,19 +86,11 @@ class TaskDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_delete -> {
-
                 if (task != null) {
-                    task?.let {
-                        val intent = Intent().apply {
-                            val actionType = ActionType.DELETE
-                            val taskAction = TaskAction(task!!, actionType)
-                            putExtra(TASK_ACTION_RESULTADO, taskAction)
-                        }
-                        setResult(Activity.RESULT_OK, intent)
-                        finish()
-                    }
+                    returnAction(task!!, ActionType.DELETE)
+
                 } else {
-                    showMessage(tvTaskDetail, "Nenhuma tarefa para deletar")
+                    showMessage(tvtasktitle, "Nenhuma tarefa para deletar")
                 }
 
                 true
@@ -77,8 +100,19 @@ class TaskDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun returnAction(task: Task, actionType: ActionType) {
+        val intent = Intent().apply {
+            val taskAction = TaskAction(task, actionType.name)
+            putExtra(TASK_ACTION_RESULTADO, taskAction)
+        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+
+    }
+
+
     private fun showMessage(view: View, message: String) {
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
             .setAction("Action", null)
             .show()
 

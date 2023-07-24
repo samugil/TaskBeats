@@ -37,21 +37,57 @@ class TaskListActivity : AppCompatActivity() {
             val taskAction = data?.getSerializableExtra(TASK_ACTION_RESULTADO) as TaskAction
             val task: Task = taskAction.task
 
-            val newList = arrayListOf<Task>().apply {
-                addAll(taskList)
+            if (taskAction.actionType == ActionType.DELETE.name) {
+                val newList = arrayListOf<Task>().apply {
+                    addAll(taskList)
+                }
+
+                // removendo o item da lista kotlin
+                newList.remove(task)
+                showMessage(ctnContent, message = "Item Deletado ${task.title}")
+
+                if (newList.size == 0) {
+                    ctnContent.visibility = View.VISIBLE
+                }
+
+                // atualizando o adpater
+                adapter.submitList(newList)
+                taskList = newList
+
+            } else if (taskAction.actionType == ActionType.CREATE.name) {
+                val newList = arrayListOf<Task>().apply {
+                    addAll(taskList)
+                }
+                //adicionando uma nova tarefa a lista
+                newList.add(task)
+                showMessage(ctnContent, message = "Item Adicionado ${task.title}")
+
+
+                // atualizando o adpater
+                adapter.submitList(newList)
+                taskList = newList
+
+                if (newList.size != 0) {
+                    ctnContent.visibility = View.GONE
+                }
+            } else if (taskAction.actionType == ActionType.UPDATE.name) {
+
+
+                val tempEmptyList = arrayListOf<Task>()
+                taskList.forEach {
+                    if (it.id == task.id) {
+                        val newItem = Task(it.id, task.title, task.description)
+                        tempEmptyList.add(newItem)
+                    } else {
+                        tempEmptyList.add(it)
+                    }
+                }
+                showMessage(ctnContent, message = "Item Atualizado ${task.title}")
+
+                // atualizando o adpater
+                adapter.submitList(tempEmptyList)
+                taskList = tempEmptyList
             }
-
-            // removendo o item da lista kotlin
-            newList.remove(task)
-            showMessage(ctnContent, message = "Item Deletado ${task.title}")
-
-            if (newList.size == 0) {
-                ctnContent.visibility = View.VISIBLE
-            }
-
-            // atualizando o adpater
-            adapter.submitList(newList)
-            taskList = newList
         }
 
     }
@@ -94,17 +130,17 @@ class TaskListActivity : AppCompatActivity() {
 
 }
 
-sealed class ActionType : Serializable {
+enum class ActionType {
 
-    object DELETE : ActionType()
-    object UPDATE : ActionType()
-    object CREATE : ActionType()
+    DELETE,
+    UPDATE,
+    CREATE
 
 }
 
 data class TaskAction(
     val task: Task,
-    val actionType: ActionType
+    val actionType: String
 ) : Serializable
 
 const val TASK_ACTION_RESULTADO = "TASK_ACTION_RESULTADO"

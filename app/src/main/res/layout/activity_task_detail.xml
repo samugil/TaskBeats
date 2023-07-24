@@ -4,13 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="18dp"
     tools:context=".TaskDetailActivity">
 
     <TextView
-        android:id="@+id/tv_task_detail"
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Teste de tela"
+        android:text="Título da Tarefa: "
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        style="@style/Title"
         ></TextView>
+
+    <EditText
+        android:id="@+id/edt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite aqui o Titulo da sua tarefa"
+        style="@style/Hint"
+        />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descrição da Tarefa: "
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        style="@style/Desc"
+        ></TextView>
+
+    <EditText
+        android:id="@+id/edt_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite aqui a Descrição da sua Tarefa"
+        style="@style/Hint"
+        />
+
+    <Button
+        android:id="@+id/btn_conluir_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Concluir"
+        style="@style/Button"
+
+        />
 
 </LinearLayout>

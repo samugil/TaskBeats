@@ -47,8 +47,7 @@
             android:layout_margin="24dp"
             android:layout_gravity="center"
             android:text="Adcione uma tarefa"
-            android:textSize="30dp"
-            android:textStyle="bold"
+            style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
