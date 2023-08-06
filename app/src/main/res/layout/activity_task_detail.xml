@@ -4,53 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_margin="18dp"
+    android:orientation="vertical"
     tools:context=".TaskDetailActivity">
+
+    <include layout="@layout/toolbar" />
 
     <TextView
         android:id="@+id/tv_title"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Título da Tarefa: "
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        style="@style/Title"
-        ></TextView>
+        android:layout_marginTop="?attr/actionBarSize"
+        android:text="Título da Tarefa: "></TextView>
 
     <EditText
         android:id="@+id/edt_title"
+        style="@style/Hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Digite aqui o Titulo da sua tarefa"
-        style="@style/Hint"
-        />
+        android:hint="Digite aqui o Titulo da sua tarefa" />
 
     <TextView
         android:id="@+id/tv_desc"
+        style="@style/Desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Descrição da Tarefa: "
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
-        style="@style/Desc"
-        ></TextView>
+        android:text="Descrição da Tarefa: "></TextView>
 
     <EditText
         android:id="@+id/edt_desc"
+        style="@style/Hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Digite aqui a Descrição da sua Tarefa"
-        style="@style/Hint"
-        />
+        android:hint="Digite aqui a Descrição da sua Tarefa" />
 
     <Button
         android:id="@+id/btn_conluir_task"
+        style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Concluir"
-        style="@style/Button"
 
         />
 
