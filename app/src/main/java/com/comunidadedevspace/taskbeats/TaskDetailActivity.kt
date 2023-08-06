@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.comunidadedevspace.taskbeats.data.Task
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -36,6 +37,8 @@ class TaskDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_detail)
+        setSupportActionBar(findViewById(R.id.toolbar))
+        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
         // recuperar task
         task = (intent.getSerializableExtra(TASK_DETAIL_EXTRA) as Task?)

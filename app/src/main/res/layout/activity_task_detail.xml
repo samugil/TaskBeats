@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="18dp"
     android:orientation="vertical"
     tools:context=".TaskDetailActivity">
 
@@ -15,8 +14,9 @@
         style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="18dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginTop="16dp"
         android:text="Título da Tarefa: "></TextView>
 
     <EditText
@@ -24,6 +24,7 @@
         style="@style/Hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="18dp"
         android:hint="Digite aqui o Titulo da sua tarefa" />
 
     <TextView
@@ -31,6 +32,7 @@
         style="@style/Desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="18dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:text="Descrição da Tarefa: "></TextView>
@@ -40,6 +42,7 @@
         style="@style/Hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="18dp"
         android:hint="Digite aqui a Descrição da sua Tarefa" />
 
     <Button
@@ -47,6 +50,7 @@
         style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="18dp"
         android:layout_marginTop="20dp"
         android:text="Concluir"
 

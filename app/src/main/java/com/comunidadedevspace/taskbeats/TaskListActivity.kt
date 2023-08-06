@@ -7,25 +7,38 @@ import android.widget.LinearLayout
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.comunidadedevspace.taskbeats.data.AppDataBase
+import com.comunidadedevspace.taskbeats.data.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 
 class TaskListActivity : AppCompatActivity() {
 
-    //Kotlin
-    private var taskList = arrayListOf(
-        Task(0, "Title 0", "Desc 0"),
-        Task(1, "Title 1", "Desc 1"),
-        Task(2, "Title 2", "Desc 2"),
-        Task(3, "Title 3", "Desc 3")
-    )
 
     private lateinit var ctnContent: LinearLayout
 
     // Adapter
     private val adapter: TaskListAdapter = TaskListAdapter(::onListItemClicked)
+
+
+    private val dataBase by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            AppDataBase::class.java, "taskbeats-database"
+        ).build()
+    }
+
+    private val dao by lazy {
+
+        dataBase.taskDao()
+
+    }
 
 
     private val startForResult = registerForActivityResult(
@@ -37,56 +50,20 @@ class TaskListActivity : AppCompatActivity() {
             val taskAction = data?.getSerializableExtra(TASK_ACTION_RESULTADO) as TaskAction
             val task: Task = taskAction.task
 
-            if (taskAction.actionType == ActionType.DELETE.name) {
-                val newList = arrayListOf<Task>().apply {
-                    addAll(taskList)
+            when (taskAction.actionType) {
+                ActionType.DELETE.name -> {
+                    deleteRoom(task.id)
+                    showMessage(ctnContent,"Tarefa deletada.")
                 }
+                ActionType.CREATE.name -> {
+                    insertRoom(task)
+                    showMessage(ctnContent,"Tafera incluída.")
 
-                // removendo o item da lista kotlin
-                newList.remove(task)
-                showMessage(ctnContent, message = "Item Deletado ${task.title}")
-
-                if (newList.size == 0) {
-                    ctnContent.visibility = View.VISIBLE
                 }
-
-                // atualizando o adpater
-                adapter.submitList(newList)
-                taskList = newList
-
-            } else if (taskAction.actionType == ActionType.CREATE.name) {
-                val newList = arrayListOf<Task>().apply {
-                    addAll(taskList)
+                ActionType.UPDATE.name -> {
+                    updateRoom(task)
+                    showMessage(ctnContent,"Tarefa Atualizada.")
                 }
-                //adicionando uma nova tarefa a lista
-                newList.add(task)
-                showMessage(ctnContent, message = "Item Adicionado ${task.title}")
-
-
-                // atualizando o adpater
-                adapter.submitList(newList)
-                taskList = newList
-
-                if (newList.size != 0) {
-                    ctnContent.visibility = View.GONE
-                }
-            } else if (taskAction.actionType == ActionType.UPDATE.name) {
-
-
-                val tempEmptyList = arrayListOf<Task>()
-                taskList.forEach {
-                    if (it.id == task.id) {
-                        val newItem = Task(it.id, task.title, task.description)
-                        tempEmptyList.add(newItem)
-                    } else {
-                        tempEmptyList.add(it)
-                    }
-                }
-                showMessage(ctnContent, message = "Item Atualizado ${task.title}")
-
-                // atualizando o adpater
-                adapter.submitList(tempEmptyList)
-                taskList = tempEmptyList
             }
         }
 
@@ -96,8 +73,9 @@ class TaskListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
 
+        listFromDatabase()
         ctnContent = findViewById(R.id.ctn_content)
-        adapter.submitList(taskList)
+
 
         // RecyclerView
         val rvTasks: RecyclerView = findViewById(R.id.rv_task_list)
@@ -107,6 +85,47 @@ class TaskListActivity : AppCompatActivity() {
         fab.setOnClickListener {
             showMessage(it, "Here's a Snackbar")
             openTaskListDetail()
+
+        }
+    }
+
+    private fun insertRoom(task: Task) {
+
+        CoroutineScope(IO).launch {
+            dao.insert(task)
+            listFromDatabase()
+        }
+
+    }
+
+    private fun updateRoom(task: Task) {
+
+        CoroutineScope(IO).launch {
+            dao.update(task)
+            listFromDatabase()
+        }
+
+    }
+
+    private fun deleteRoom(id: Int) {
+
+        CoroutineScope(IO).launch {
+            dao.delete(id)
+            listFromDatabase()
+        }
+
+    }
+
+    private fun listFromDatabase() {
+        CoroutineScope(IO).launch {
+            val myDataBaseLIst: List<Task> = dao.getAll()
+            adapter.submitList(myDataBaseLIst)
+
+            if (myDataBaseLIst.isEmpty()) {
+                ctnContent.visibility = View.VISIBLE
+            }else{
+                ctnContent.visibility = View.GONE
+            }
 
         }
     }
