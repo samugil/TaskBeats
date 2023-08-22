@@ -1,4 +1,4 @@
-package com.comunidadedevspace.taskbeats
+package com.comunidadedevspace.taskbeats.presentation
 
 import android.app.Activity
 import android.content.Context
@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.comunidadedevspace.taskbeats.R
 import com.comunidadedevspace.taskbeats.data.Task
 import com.google.android.material.snackbar.Snackbar
 
