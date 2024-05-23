@@ -19,62 +19,62 @@ import com.google.android.material.snackbar.Snackbar
 
 class TaskDetailActivity : AppCompatActivity() {
 
-    private var task: Task? = null
-    private lateinit var tvtasktitle: TextView
+        private var task: Task? = null
+        private lateinit var tvtasktitle: TextView
 
-    companion object {
+        companion object {
 
-        private const val TASK_DETAIL_EXTRA = "task.extra.detail"
+            private const val TASK_DETAIL_EXTRA = "task.extra.detail"
 
-        fun start(context: Context, task: Task?): Intent {
-            val intent = Intent(context, TaskDetailActivity::class.java).apply {
-                putExtra(TASK_DETAIL_EXTRA, task)
-            }
-            return intent
-        }
-
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_task_detail)
-        setSupportActionBar(findViewById(R.id.toolbar))
-        getSupportActionBar()?.setDisplayShowTitleEnabled(false)
-
-        // recuperar task
-        task = (intent.getSerializableExtra(TASK_DETAIL_EXTRA) as Task?)
-
-        //recuperar campo do xml apenas para usar no showmessage
-        tvtasktitle = findViewById(R.id.tv_title)
-
-        val edtTitle = findViewById<EditText>(R.id.edt_title)
-        val edtDesc = findViewById<EditText>(R.id.edt_desc)
-        val btnConcluir = findViewById<Button>(R.id.btn_conluir_task)
-
-
-        if (task != null) {
-            edtTitle.setText(task!!.title)
-            edtDesc.setText(task!!.description)
-        }
-
-        btnConcluir.setOnClickListener {
-            val title = edtTitle.text.toString()
-            val desc = edtDesc.text.toString()
-
-            if (title.isNotEmpty() && desc.isNotEmpty()) {
-                if(task== null){
-                    addOrUpdateTask(0,title, desc, ActionType.CREATE)
-                }else{
-                    addOrUpdateTask(task!!.id,title, desc, ActionType.UPDATE)
+            fun start(context: Context, task: Task?): Intent {
+                val intent = Intent(context, TaskDetailActivity::class.java).apply {
+                    putExtra(TASK_DETAIL_EXTRA, task)
                 }
-            } else {
-                showMessage(tvtasktitle, "Titulo e Descrição precisam ser preenchidos")
+                return intent
             }
 
         }
 
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_task_detail)
+            setSupportActionBar(findViewById(R.id.toolbar))
+            getSupportActionBar()?.setDisplayShowTitleEnabled(false)
 
-    }
+            // recuperar task
+            task = (intent.getSerializableExtra(TASK_DETAIL_EXTRA) as Task?)
+
+            //recuperar campo do xml apenas para usar no showmessage
+            tvtasktitle = findViewById(R.id.tv_title)
+
+            val edtTitle = findViewById<EditText>(R.id.edt_title)
+            val edtDesc = findViewById<EditText>(R.id.edt_desc)
+            val btnConcluir = findViewById<Button>(R.id.btn_conluir_task)
+
+
+            if (task != null) {
+                edtTitle.setText(task!!.title)
+                edtDesc.setText(task!!.description)
+            }
+
+            btnConcluir.setOnClickListener {
+                val title = edtTitle.text.toString()
+                val desc = edtDesc.text.toString()
+
+                if (title.isNotEmpty() && desc.isNotEmpty()) {
+                    if(task== null){
+                        addOrUpdateTask(0,title, desc, ActionType.CREATE)
+                    }else{
+                        addOrUpdateTask(task!!.id,title, desc, ActionType.UPDATE)
+                    }
+                } else {
+                    showMessage(tvtasktitle, "Titulo e Descrição precisam ser preenchidos")
+                }
+
+            }
+
+
+        }
 
     private fun addOrUpdateTask(id: Int,title: String, description: String, actionType: ActionType) {
         val task = Task(id, title, description)
